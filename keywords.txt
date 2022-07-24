@@ -1,0 +1,16 @@
+ESPBufferedClient	KEYWORD1
+connect	KEYWORD2
+write	KEYWORD2
+availableForWrite	KEYWORD2
+available	KEYWORD2
+read	KEYWORD2
+peek	KEYWORD2
+flush	KEYWORD2
+stop	KEYWORD2
+connected	KEYWORD2
+setDebugStream	KEYWORD2
+ESPAutoWiFiConfigSetup	KEYWORD2
+ESPAutoWiFiConfigLoop	KEYWORD2
+getESPAutoWiFiConfigEEPROM_Size	KEYWORD2
+ESPAutoWiFiConfig_setColor	KEYWORD2
+
