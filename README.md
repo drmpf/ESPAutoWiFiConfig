@@ -17,7 +17,7 @@ See [ESP32 / ESP8266 Auto WiFi Config](https://www.forward.com.au/pfod/ESPAutoWi
 NSW Australia, www.forward.com.au  
 This code is not warranted to be fit for any purpose. You may only use it at your own risk.  
 This code may be freely used for both private and commercial use  
-Provide this copyright is maintained.  
+Provide this copyright is maintained.    
 
 # Revisions
 Version 2.1 added reboot on loss of connection, clearRebootFlag while try trying to connect, added defaultNetworkSettings (see below)   
