@@ -8,6 +8,7 @@ This library includes:-
 * **ESPAutoWiFiConfig**, Automatically opens a web page to configure your network settings  
 * **ESPBufferedClient**, buffers prints to WiFi connections to prevent lots of small packets being sent   
 * **ESP32_WS2812Flasher**, support for flashing the WS2812 RGB Led on the ESP32-C3/S3  
+This library needs the [SafeString](https://www.forward.com.au/pfod/ArduinoProgramming/SafeString/index.html) library to be installed as well
 
 # How-To
 See [ESP32 / ESP8266 Auto WiFi Config](https://www.forward.com.au/pfod/ESPAutoWiFiConfig/index.html)  
