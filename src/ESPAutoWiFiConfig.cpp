@@ -64,7 +64,7 @@ struct WiFi_CONFIG_storage_struct {
   char staticIP[MAX_STATICIP_LEN_CONFIG + 1]; // staticIP, if empty use DHCP + null
 };
 
-static const size_t wifiConfigFileAddress = 0;  // binary data , added to eepromOffset
+static const size_t wifiConfigFileAddress = 8;  // binary data , added to eepromOffset with a little padding
 static size_t rebootDetectionFileAddress; // sizeof(WiFi_CONFIG_storage_struct) rounded up, added to eepromOffset
 static const uint8_t REBOOT_ACTIVE = 21;   // 0b010101
 static const uint8_t REBOOT_INACTIVE = 42; // 0b101010
