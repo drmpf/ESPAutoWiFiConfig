@@ -121,17 +121,17 @@ static ESP8266WebServer accessPointWebServer(80);  // this just sets portNo noth
 
 // set these to your testing network if uploads clear out previous settings and return true
 bool defaultNetworkSettings() {
-	return false; // no defaults
-	// example settings
-//  cSFA(sfSSID, storage.ssid);
-//  cSFA(sfPW, storage.password);
-//  cSFA(sfIP, storage.staticIP);
-//  sfSSID = "myWiFiSSID"
-//  sfPW = "myWiFiPassword";
-//  sfIP = "10.1.1.76"; // the static IP
-//  return true;
+  return false; // no defaults
+  // example settings
+  //  cSFA(sfSSID, storage.ssid);
+  //  cSFA(sfPW, storage.password);
+  //  cSFA(sfIP, storage.staticIP);
+  //  sfSSID = "myWiFiSSID"
+  //  sfPW = "myWiFiPassword";
+  //  sfIP = "10.1.1.76"; // the static IP
+  //  return true;
 }
-	
+
 /**
     call this from near the top of setup()
     use -ve pin number, e.g. -8 for ESP32C RGB_LED, to drive ws2812 RGB led on that pin, in which case highForLedOn is ignored
@@ -145,16 +145,16 @@ bool defaultNetworkSettings() {
    // rest of setup
 */
 // if ESPAutoWiFiConfigSetup() returns true the in AP mode waiting for connection to set WiFi SSID/pw/ip settings
-// ledPin is the output that drives the indicator led, 
+// ledPin is the output that drives the indicator led,
 // highForLedOn is true if +volts turns led on, else false if 0V out turns led on
 // EEPROM_offset 0 unless you are using EEPROM in your code in which case pass in the size of the EEPROM your code uses
 // and ESPAutoWiFiConfig will EEPROM addresses after that.
 // Normally the led will turn OFF once the WiFi connects
-// NOTE: if you want the led to stay ON, pass in the opposite value for highForLedOn, 
-//  i.e.  highForLedOn = false true if +volts turns led on, highForLedOn = true if 0V out turns led on 
+// NOTE: if you want the led to stay ON, pass in the opposite value for highForLedOn,
+//  i.e.  highForLedOn = false true if +volts turns led on, highForLedOn = true if 0V out turns led on
 bool ESPAutoWiFiConfigSetup(int ledPin, bool highForLedOn, size_t EEPROM_offset) {
   bool outputInverted = !highForLedOn; // normal is highForOn
-  eepromOffset = EEPROM_offset; 
+  eepromOffset = EEPROM_offset;
   rebootDetectionFileAddress = (sizeof(WiFi_CONFIG_storage_struct) + 3) & (~3); // rounded up
   startEEPROM(); // uses eepromOffset and getESPAutoWiFiConfigEEPROM_Size()
   if (ledPin < 0) {
@@ -238,18 +238,18 @@ bool ESPAutoWiFiConfigLoop() {
     if (WiFi.status() != WL_CONNECTED) {
       flasherPtr->setOnOff(SLOW_FLASH_WHILE_CONNECTING); // ignored if already flashing at 100ms
       if (!lostConnectionRebootTimer.isRunning()) {
-      	lostConnectionRebootTimer.start(LOST_CONNECTION_REBOOT_MS);
+        lostConnectionRebootTimer.start(LOST_CONNECTION_REBOOT_MS);
       }
     } else {// (WiFi.status() == WL_CONNECTED)
       // so all OK so turn led OFF
       lostConnectionRebootTimer.stop();
       flasherPtr->setOnOff(PIN_OFF); // ignored if already OFF
     }
-    if(lostConnectionRebootTimer.justFinished()) {
-    	// did not auto reconnect after 30 sec start from scratch again
-    	clearRebootFlag(); // should not be needed but..
-    	ESP.restart(); // see https://github.com/esp8266/Arduino/issues/1017  seems to work here
-    }    	
+    if (lostConnectionRebootTimer.justFinished()) {
+      // did not auto reconnect after 30 sec start from scratch again
+      clearRebootFlag(); // should not be needed but..
+      ESP.restart(); // see https://github.com/esp8266/Arduino/issues/1017  seems to work here
+    }
     flasherPtr->update();
     return false; // not doing wifi config so just ignore this call
   }
@@ -289,6 +289,9 @@ void ESPAutoWiFiConfig_setColor(uint8_t _red, uint8_t _green, uint8_t _blue) {
 // returns false if fails to connect in 30 sec;
 static bool tryToConnectToConfiguredWiFiNetwork() {
   loadWiFiConfig();
+  if (storage.ssid[0] == '\0') {
+    return false;
+  }
   // ======================= connect to router ===================
   WiFi.mode(WIFI_STA);
   if (storage.staticIP[0] != '\0') {
@@ -422,6 +425,7 @@ static void scanForStrongestAP(SafeString & result) {
    sets up AP and loads current wifi settings
 */
 static void setupAP() {
+  WiFi.mode(WIFI_AP);
   clearRebootFlag(); // start normally next time
   loadWiFiConfig(); // sets global storage
   flasherPtr->setOnOff(FAST_FLASH_WHILE_AP_ACTIVE);
@@ -683,9 +687,9 @@ void setESPAutoWiFiConfigDebugOut(Stream &out) {
 size_t getESPAutoWiFiConfigEEPROM_Size() {
   size_t rebootDetectionFileAddress = (sizeof(WiFi_CONFIG_storage_struct) + 3) & (~3); // rounded up
   size_t configSize = rebootDetectionFileAddress + 1 ; // rounded up storage + byte for reboot
-  configSize = (configSize +8 + 3) & (~3); // round up again
+  configSize = (configSize + 8 + 3) & (~3); // round up again
   return configSize;
-}	
+}
 
 void startEEPROM() {
   EEPROM.begin(eepromOffset + getESPAutoWiFiConfigEEPROM_Size());
@@ -739,8 +743,11 @@ static void loadWiFiConfig() {
   EEPROM.get(wifiConfigFileAddress + eepromOffset, storage);
   // clean it up cSFA makes sure there is terminating '\0'
   cSFA(sfSSID, storage.ssid);
+  sfSSID.trim();
   cSFA(sfPW, storage.password);
+  sfPW.trim();
   cSFA(sfIP, storage.staticIP);
+  sfIP.trim();
   if (debugPtr) {
     debugPtr->println("loaded config");
     printWifConfig(debugPtr);

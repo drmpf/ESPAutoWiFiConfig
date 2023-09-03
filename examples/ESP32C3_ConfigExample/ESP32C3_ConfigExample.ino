@@ -22,10 +22,12 @@ WebServer server(80);
 
 // which pin drives the ws2812 addressable RGB led on ESP32 C/S
 // -ve pin value => use ws2812 driver
+// for Adafruit ESP32C3 QTPY use pinNo = -2
 // for ESP32C3_RGB_LED use pinNo = -8
 // for ESP32-S2-DevKitM-1 	use pinNo = -18
 // for ESP32-S2-Saola-1 	use pinNo = -18
 // for ESP32-S3-DevKitC-1 	use pinNo = -48
+// for Fire_Beetle ESP32-E 	use pinNo = -D8   not D8 not just 8
 
 int ledPin = -8; // for ESP32C3 RGB LED,
 // default colour GREEN,
