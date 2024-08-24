@@ -67,7 +67,7 @@ bool ESPAutoWiFiConfigSetup(int ledPin, bool highForLedOn, size_t EEPROM_offset)
 /**
     call this from near the top of loop() with
   void loop() {
-   if (ESPAutoWiFiConfigLooptoConfigLoop()) {
+   if (ESPAutoWiFiConfigLoop()) {
       return;
    }
    // rest of loop

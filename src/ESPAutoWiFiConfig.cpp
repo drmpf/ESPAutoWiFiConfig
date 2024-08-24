@@ -182,7 +182,7 @@ bool ESPAutoWiFiConfigSetup(int ledPin, bool highForLedOn, size_t EEPROM_offset)
 
   WiFi.persistent(false);
   WiFi.mode(WIFI_OFF); // force begin
-  WiFi.setAutoConnect(false); // does not work for static ip see https://github.com/esp8266/Arduino/issues/2735
+  //WiFi.setAutoConnect(false); // does not work for static ip see https://github.com/esp8266/Arduino/issues/2735
   WiFi.setAutoReconnect(true); // try to reconnect if we loose the connection
   if ((!checkValidRebootFlag()) || rebootFlagExists()) {
     // double reboot so start wifi config
