@@ -23,6 +23,7 @@ int ledPin = 0; // for Adafruit ESP8266 HUZZAH - onboard Led connected to GPIO0
 // use ledPin = 1 for ESP-01 (Blue led on TX (GPIO1), ESP-01 also has a Red power led)
 bool highForLedOn = false; // need to make output low to turn Adafruit ESP8266 HUZZAH's, ESP-01, ESP-01S  Led ON
 size_t eepromOffset = 0; // if you use EEPROM.begin(size) in your code add the size here so AutoWiFi data is written after your data
+const char deviceName[] = "Name of your device"; // optional only first 50 char are used
 
 //#define DEBUG
 
@@ -44,7 +45,8 @@ void setup() {
   setESPAutoWiFiConfigDebugOut(Serial); // turns on debug output for the ESPAutoWiFiConfig code
 #endif
 
-  if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn, eepromOffset)) { // check if we should start access point to configure WiFi settings
+  if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn,0,deviceName)) { // check if we should start access point to configure WiFi settings
+  // OR if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn,0)) { // if not using device name
     return; // in config mode so skip rest of setup
   }
   

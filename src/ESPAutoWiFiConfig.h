@@ -62,7 +62,8 @@
 // EEPROM_offset 0 unless you are using EEPROM in your code in which case pass in the size of the EEPROM your code uses
 // and ESPAutoWiFiConfig will EEPROM addresses after that.
 // AutoConfig uses 148 bytes of EEPROM
-bool ESPAutoWiFiConfigSetup(int ledPin, bool highForLedOn, size_t EEPROM_offset);
+// if the name is not NULL, up to the first 50char are shown in the Config page
+bool ESPAutoWiFiConfigSetup(int ledPin, bool highForLedOn, size_t EEPROM_offset, const char *deviceName = NULL);
 
 /**
     call this from near the top of loop() with

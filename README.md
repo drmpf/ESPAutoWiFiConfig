@@ -21,7 +21,8 @@ This code may be freely used for both private and commercial use
 Provide this copyright is maintained.    
 
 # Revisions
-Version 2.2,1 corrected docs  
+Version 2.2.2 added optional deviceName  
+Version 2.2.1 corrected docs  
 Version 2.2 added padding to EEPROM offset   
 Version 2.1 added reboot on loss of connection, clearRebootFlag while try trying to connect, added defaultNetworkSettings (see below)   
 Version 2.0 supports ESP32-C3, ESP32-S2, ESP32-S3, etc that have a ws2312 RGB addressable led   

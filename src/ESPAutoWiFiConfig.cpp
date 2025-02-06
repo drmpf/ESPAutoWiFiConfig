@@ -32,6 +32,8 @@
 #include <PinFlasher.h>
 #include <ESP32_WS2812Flasher.h>  // can include this for ESP8266 as well see the #ifdefs in the code
 
+static char deviceName[51]; // holds 50 chars
+
 // normally DEBUG is commented out
 #define DEBUG
 static Stream* debugPtr = NULL;  // local to this file
@@ -152,7 +154,12 @@ bool defaultNetworkSettings() {
 // Normally the led will turn OFF once the WiFi connects
 // NOTE: if you want the led to stay ON, pass in the opposite value for highForLedOn,
 //  i.e.  highForLedOn = false true if +volts turns led on, highForLedOn = true if 0V out turns led on
-bool ESPAutoWiFiConfigSetup(int ledPin, bool highForLedOn, size_t EEPROM_offset) {
+bool ESPAutoWiFiConfigSetup(int ledPin, bool highForLedOn, size_t EEPROM_offset, const char *_deviceName) {
+  cSFA(sfDeviceName,deviceName);
+  sfDeviceName.clear();
+  if (_deviceName) { // not know
+    sfDeviceName.readFrom(_deviceName); // at most 50 chars read
+  }
   bool outputInverted = !highForLedOn; // normal is highForOn
   eepromOffset = EEPROM_offset;
   rebootDetectionFileAddress = (sizeof(WiFi_CONFIG_storage_struct) + 3) & (~3); // rounded up
@@ -308,16 +315,21 @@ static bool tryToConnectToConfiguredWiFiNetwork() {
     }
   } // else leave as DHCP
 
+  if (deviceName[0]) {
+    if (debugPtr) {
+      debugPtr->print(deviceName);
+    }
+  }    
   if (WiFi.status() != WL_CONNECTED) {
     WiFi.begin(storage.ssid, storage.password);
     flasherPtr->setOnOff(SLOW_FLASH_WHILE_CONNECTING);
     if (debugPtr) {
-      debugPtr->println("   Connecting to WiFi");
+      debugPtr->println(" connecting to WiFi");
     }
   } else {
     flasherPtr->setOnOff(PIN_OFF);
     if (debugPtr) {
-      debugPtr->println("   Already connected to WiFi");
+      debugPtr->println(" already connected to WiFi");
     }
   }
   // Wait for connection for 30sec
@@ -352,7 +364,10 @@ static bool tryToConnectToConfiguredWiFiNetwork() {
   flasherPtr->setOnOff(PIN_OFF);
   if (debugPtr) {
     debugPtr->println("");
-    debugPtr->print("Connected to ");
+    if (deviceName[0]) {
+      debugPtr->println(deviceName);
+    }
+    debugPtr->print(" connected to ");
     debugPtr->println(storage.ssid);
     debugPtr->print("IP address: ");
     debugPtr->println(WiFi.localIP());
@@ -545,8 +560,13 @@ static void handleConfig() {
                   "<meta name=viewport content=\"width=device-width, initial-scale=1\">"
                   "</head>"
                   "<body>"
-                  "<h2>WiFi Network Configuration Settings saved.</h2>"
-                  "Power cycle to connect to ";
+                  "<h2>WiFi Network Configuration Settings saved";
+  if (deviceName[0]) {
+      rtnMsg += " for<br>";
+     rtnMsg += deviceName;
+  }
+  rtnMsg += "</h2>"
+             "Power cycle to connect to ";
   if (storage.password[0] == '\0') {
     rtnMsg += "the open network ";
   }
@@ -594,7 +614,12 @@ static void handleRoot() {
         "<meta name=viewport content=\"width=device-width, initial-scale=1\">"
         "</head>"
         "<body>"
-        "<h2>Setup WiFi Network Configuration</h2>"
+        "<h2>Setup WiFi Network Configuration";
+        if (deviceName[0]) {
+            msg +=" for<br>";
+            msg += deviceName;
+        }
+        msg += "</h2>"
         "<p>Use this form to configure your device to connect to your WiFi network.<br>"
         "<i>Leading and trailing spaces are trimmed.</i></p>"
         "<form class=\"form\" method=\"post\" action=\"/config\" >"

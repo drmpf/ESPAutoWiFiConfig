@@ -22,6 +22,7 @@ WebServer server(80);
 int ledPin = 5; // for Sparkfun ESP32 Thing - onboard Led connected to GPIO5
 bool highForLedOn = true; // need to make output high to turn Sparkfun ESP32 Thing's GPIO5 Led ON
 size_t eepromOffset = 0; // if you use EEPROM.begin(size) in your code add the size here so AutoWiFi data is written after your data
+const char deviceName[] = "Name of your device"; // optional only first 50 char are used
 
 //#define DEBUG
 
@@ -43,7 +44,8 @@ void setup() {
   setESPAutoWiFiConfigDebugOut(Serial); // turns on debug output for the ESPAutoWiFiConfig code
 #endif
 
-  if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn,0)) { // check if we should start access point to configure WiFi settings
+  if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn,0,deviceName)) { // check if we should start access point to configure WiFi settings
+  // OR if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn,0)) { // if not using device name
     return; // in config mode so skip rest of setup
   }
   

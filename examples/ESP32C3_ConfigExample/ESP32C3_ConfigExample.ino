@@ -34,6 +34,7 @@ int ledPin = -8; // for ESP32C3 RGB LED,
 // use ESPAutoWiFiConfig_setRGBLedColor(uint32_t red, uint32_t green, uint32_t blue), arguments in range 0 to 255, to change the colour
 bool highForLedOn = true; // false for ws8212 will leave the led ON when WiFi is connected
 size_t eepromOffset = 0; // if you use EEPROM.begin(size) in your code add the size here so AutoWiFi data is written after your data
+const char deviceName[] = "Name of your device"; // optional only first 50 char are used
 
 //#define DEBUG
 
@@ -55,7 +56,8 @@ void setup() {
   setESPAutoWiFiConfigDebugOut(Serial); // turns on debug output for the ESPAutoWiFiConfig code
 #endif
   ESPAutoWiFiConfig_setColor(0, 0, 128); // make led flash Blue instead of default light GREEN
-  if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn, 0)) { // check if we should start access point to configure WiFi settings
+  if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn,0,deviceName)) { // check if we should start access point to configure WiFi settings
+  // OR if (ESPAutoWiFiConfigSetup(ledPin, highForLedOn,0)) { // if not using device name
     return; // in config mode so skip rest of setup
   }
 
